@@ -26,18 +26,25 @@ class Player:
       "jaflazergun"
     ]
     self.selected_weapon = 0
-    
-    
+    self.sprite_dir = "assets/sprites/player/ship/"
+    self.flames_dir = "assets/sprites/player/flames/"
     self.sprites = {
-      "pewgun": make_sprite_array('assets/sprites/base.png', 4, 16, False),
-      "rocketlauncher": make_sprite_array('assets/sprites/missile.png', 4, 16, False),
-      "rotarygun": make_sprite_array('assets/sprites/rotary.png', 8, 16, True),
-      "overheatgun": make_sprite_array('assets/sprites/overheat.png', 8, 16, True),
-      "jaflazergun": make_sprite_array('assets/sprites/lazer.png', 8, 16, True)
+      "pewgun": make_sprite_array(self.sprite_dir+'base.png', 4, 16, False),
+      "rocketlauncher": make_sprite_array(self.sprite_dir+'missile.png', 4, 16, False),
+      "rotarygun": make_sprite_array(self.sprite_dir+'rotary.png', 8, 16, True),
+      "overheatgun": make_sprite_array(self.sprite_dir+'overheat.png', 8, 16, True),
+      "jaflazergun": make_sprite_array(self.sprite_dir+'lazer.png', 8, 16, True)
+    }
+    self.flames = {
+      "up": make_sprite_array(self.flames_dir+'up.png', 8, 16, True),
+      "down": make_sprite_array(self.flames_dir+'down.png', 8, 16, True),
+      "left": make_sprite_array(self.flames_dir+'left.png', 8, 16, True),
+      "right": make_sprite_array(self.flames_dir+'right.png', 8, 16, True)
     }
     
-    
     self.did_press_v = False
+    
+    self.flame_animtimer = 0
 
   def move_player(self):
     keys = pygame.key.get_pressed()
@@ -93,8 +100,21 @@ class Player:
       "up": 4*the_thing,
       "down": 2*the_thing
     }
+    self.flame_offset = (0, 0)
+    if self.direction == "left":
+      self.flame_offset = (14, 0)
+    elif self.direction == "right":
+      self.flame_offset = (-14, 0)
+    elif self.direction == "up":
+      self.flame_offset = (0, 14)
+    elif self.direction == "down":
+      self.flame_offset = (0, -14)
+    
+    self.flame_animtimer += 1
+    self.flame_animtimer %= len(self.flames[self.direction])-1
     
     # Draw the sprite onto the surface at the player's position
+    surface.blit(self.flames[self.direction][self.flame_animtimer+1], (self.position[0] - offset[0] + self.flame_offset[0], self.position[1] - offset[1] + self.flame_offset[1]))
     surface.blit(self.sprites[self.weapons[self.selected_weapon]][direction_num[self.direction]], (self.position[0] - offset[0], self.position[1] - offset[1]))
     
     

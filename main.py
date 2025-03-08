@@ -12,7 +12,8 @@ pygame.init()
 pygame.display.set_caption("My Game")
 
 # Create the screen with proper dimensions
-screen = pygame.display.set_mode((320, 240))
+original_width, original_height = 320, 240
+screen = pygame.display.set_mode((original_width, original_height), pygame.SCALED)
 background = Background('assets/background.png', screen)
 
 # Ensure display is properly set 
@@ -53,9 +54,16 @@ while running:
   for event in pygame.event.get():
     if event.type == pygame.QUIT:
       running = False
+    elif event.type == pygame.VIDEORESIZE:
+      new_width = event.w
+      new_height = int(new_width * 3 / 4)
+      screen = pygame.display.set_mode((new_width, new_height), pygame.SCALED)
+      background = Background('assets/background.png', screen)
 
   # Run game logic and ensure screen updates are visible
   main()
+  
+
   
   # Ensure display updates are processed
   pygame.display.flip()
