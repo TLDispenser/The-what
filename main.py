@@ -4,6 +4,7 @@ import os
 from player import Player
 from camera import Camera
 from background import Background
+from gui import draw_hud
 
 # Initialize pygame
 pygame.init()
@@ -20,6 +21,10 @@ background = Background('assets/background.png', screen)
 pygame.display.flip()
 
 
+bullets = []
+projectiles = []
+enemies = []
+
 def main():
   # Clear the screen
   screen.fill((0, 0, 0))
@@ -30,10 +35,15 @@ def main():
   player1.move_player()
   background.update(camera.get_pos())
   
+  for bullet in bullets:
+      bullet.move()
+      bullet.draw(screen, camera)
+  
   # Then Draw
 
   background.draw()
   player1.draw_player(screen, camera.get_pos())
+  draw_hud(screen, player1.get_stats())
 
   # Update display
   pygame.display.update()
@@ -43,7 +53,7 @@ running = True
 
 print("RUNNING!")
 
-player1 = Player(10, 10)
+player1 = Player(10, 10, bullets, projectiles)
 camera = Camera(0, 0, screen)
 
 clock = pygame.time.Clock()

@@ -1,9 +1,10 @@
 import pygame
-from spritearray import make_sprite_array
+from weapons import PewGun, RocketLauncher, RotaryGun, OverheatRotaryGun, JaFLazerGun
+from meta.spritearray import make_sprite_array
 
 class Player:
 
-  def __init__(self, x, y):
+  def __init__(self, x, y, bullets, projectiles):
     self.position = (x, y)
     self.velocity = (0, 0)
     self.direction = "right"
@@ -13,17 +14,19 @@ class Player:
     self.boostmul = 2
     self.boosting = False
     self.boost_lock = False
+    self.health = 7
+    self.ammo = 100
     self.weapons = [
-      # PewGun,
       "pewgun",
-      # RocketLauncher,
       "rocketlauncher",
-      # RotaryGun,
       "rotarygun",
-      # OverheatRotaryGun,
       "overheatgun",
-      # JaFLazerGun,
-      "jaflazergun"
+      "jaflazergun",
+      PewGun(),
+      RocketLauncher(),
+      RotaryGun(),
+      OverheatRotaryGun(),
+      JaFLazerGun()
     ]
     self.selected_weapon = 0
     self.sprite_dir = "assets/sprites/player/ship/"
@@ -46,9 +49,12 @@ class Player:
     
     self.flame_animtimer = 0
 
+    self.bullets = bullets
+    self.projectiles = projectiles
+
   def move_player(self):
     keys = pygame.key.get_pressed()
-    pressing_direction = keys[pygame.K_LEFT] and keys[pygame.K_RIGHT] and keys[pygame.K_UP] and keys[pygame.K_DOWN]
+    pressing_direction = keys[pygame.K_LEFT] or keys[pygame.K_RIGHT] or keys[pygame.K_UP] or keys[pygame.K_DOWN]
     if keys[pygame.K_LEFT]:
       self.direction = "left"
     elif keys[pygame.K_RIGHT]:
@@ -75,12 +81,25 @@ class Player:
     self.velocity = (self.velocity[0] - (self.velocity[0]/self.drag),
                      self.velocity[1] - (self.velocity[1]/self.drag),)
     
-    if keys[pygame.K_LSHIFT]:
+    if keys[pygame.K_LSHIFT] and self.boost_bar > 0 and not self.boost_lock and pressing_direction:
+      self.boosting = True
+    else:
+      self.boosting = False
+
+    if self.boosting:
+      self.boost_bar -= 1
+      if self.boost_bar <= 0:
+        self.boosting = False
+        self.boost_lock = True
+        self.boost_bar = 0
       self.current_boostmul = self.boostmul
     else:
       self.current_boostmul = 1
-    
-    keys = pygame.key.get_pressed()
+      if self.boost_bar < 400:
+        self.boost_bar += 1
+      if self.boost_bar >= 400:
+        self.boost_lock = False
+
     if keys[pygame.K_v]:
         if not self.did_press_v:
             self.selected_weapon += 1
@@ -89,11 +108,15 @@ class Player:
             self.did_press_v = True
     else:
         self.did_press_v = False
+    
+    self.max_ammo, self.ammo = self.weapons[self.selected_weapon+(len(self.weapons)//2)].get_ammo_stats()
+    if keys[pygame.K_c]:
+      self.weapons[self.selected_weapon+(len(self.weapons)//2)].shoot(self.position[0], self.position[1], self.direction, "Player", self.bullets)
 
 
 
   def draw_player(self, surface, offset):
-    the_thing = int(self.sprites[self.weapons[self.selected_weapon]][0])+1
+    the_thing = len(self.sprites[self.weapons[self.selected_weapon]]) // 4
     direction_num = {
       "left": 3*the_thing,
       "right": 1*the_thing,
@@ -116,12 +139,12 @@ class Player:
     # Draw the sprite onto the surface at the player's position
     surface.blit(self.flames[self.direction][self.flame_animtimer+1], (self.position[0] - offset[0] + self.flame_offset[0], self.position[1] - offset[1] + self.flame_offset[1]))
     surface.blit(self.sprites[self.weapons[self.selected_weapon]][direction_num[self.direction]], (self.position[0] - offset[0], self.position[1] - offset[1]))
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+  def get_stats(self):
+    round_pos = (round(self.position[0]), round(self.position[1]))
+    return (self.health, self.ammo, self.weapons[self.selected_weapon], self.boost_bar, round_pos)
+
+
+
+
+

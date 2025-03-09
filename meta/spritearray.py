@@ -1,7 +1,7 @@
 import pygame
-from spritesheet import SpriteSheet
+from meta.spritesheet import SpriteSheet
 
-def make_sprite_array(sprite, sprite_num, size, double):
+def make_sprite_array(sprite: str, sprite_num: int, size: int, double: float=True):
   sprite = SpriteSheet(sprite)
   img = None
   temp_sheet = [double]

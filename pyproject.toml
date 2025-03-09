@@ -1,8 +1,8 @@
 [project]
-name = "python-template"
+name = "the-game"
 version = "0.1.0"
-description = ""
-authors = ["Your Name <you@example.com>"]
+description = "Yet another Gargatron port. lol."
+authors = ["Kelvin Boakye <mechdispenser@gmail.com>"]
 requires-python = ">=3.11"
 dependencies = [
     "pygame>=2.6.1",
