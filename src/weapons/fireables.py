@@ -1,7 +1,7 @@
 import pygame
 import random
 import math
-from meta.spritearray import make_sprite_array
+from src.meta.spritearray import make_sprite_array
 
 class Fireable:
     def __init__(self, x, y, direction, source, speed):

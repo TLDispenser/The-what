@@ -1,5 +1,5 @@
 import pygame
-from meta.spritearray import make_sprite_array
+from src.meta.spritearray import make_sprite_array
 
 def draw_hud(screen, stats):
     health, ammo, weapon, boost, position = stats

@@ -1,6 +1,6 @@
 import pygame
-from weapons import PewGun, RocketLauncher, RotaryGun, OverheatRotaryGun, JaFLazerGun
-from meta.spritearray import make_sprite_array
+from src.weapons.weapons import PewGun, RocketLauncher, RotaryGun, OverheatRotaryGun, JaFLazerGun
+from src.meta.spritearray import make_sprite_array
 
 class Player:
 

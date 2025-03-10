@@ -1,10 +1,10 @@
 import pygame
 import random
 import os
-from player import Player
-from camera import Camera
-from background import Background
-from gui import draw_hud
+from src.core.player import Player
+from src.core.camera import Camera
+from src.core.background import Background
+from src.core.gui import draw_hud
 
 # Initialize pygame
 pygame.init()

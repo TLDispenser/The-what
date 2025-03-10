@@ -1,4 +1,4 @@
-import fireables
+from src.weapons import fireables
 
 class Weapon:
     def __init__(self):
