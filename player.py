@@ -52,6 +52,8 @@ class Player:
     self.bullets = bullets
     self.projectiles = projectiles
 
+    self.hitbox = pygame.Rect(self.position[0], self.position[1], 16, 16)
+
   def move_player(self):
     keys = pygame.key.get_pressed()
     pressing_direction = keys[pygame.K_LEFT] or keys[pygame.K_RIGHT] or keys[pygame.K_UP] or keys[pygame.K_DOWN]
@@ -103,7 +105,7 @@ class Player:
     if keys[pygame.K_v]:
         if not self.did_press_v:
             self.selected_weapon += 1
-            self.selected_weapon %= len(self.weapons)
+            self.selected_weapon %= len(self.weapons)//2
             print(self.weapons[self.selected_weapon])
             self.did_press_v = True
     else:
@@ -112,11 +114,13 @@ class Player:
     self.max_ammo, self.ammo = self.weapons[self.selected_weapon+(len(self.weapons)//2)].get_ammo_stats()
     if keys[pygame.K_c]:
       self.weapons[self.selected_weapon+(len(self.weapons)//2)].shoot(self.position[0], self.position[1], self.direction, "Player", self.bullets)
+    else:
+      self.weapons[self.selected_weapon+(len(self.weapons)//2)].did_fire = False
 
 
 
   def draw_player(self, surface, offset):
-    the_thing = len(self.sprites[self.weapons[self.selected_weapon]]) // 4
+    the_thing = int(self.sprites[self.weapons[self.selected_weapon]][0])+1
     direction_num = {
       "left": 3*the_thing,
       "right": 1*the_thing,
@@ -143,8 +147,3 @@ class Player:
   def get_stats(self):
     round_pos = (round(self.position[0]), round(self.position[1]))
     return (self.health, self.ammo, self.weapons[self.selected_weapon], self.boost_bar, round_pos)
-
-
-
-
-

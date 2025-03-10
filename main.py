@@ -10,7 +10,7 @@ from gui import draw_hud
 pygame.init()
 
 # Set window title
-pygame.display.set_caption("My Game")
+pygame.display.set_caption("Gargatron")
 
 # Create the screen with proper dimensions
 original_width, original_height = 320, 240
@@ -34,15 +34,18 @@ def main():
   camera.move(player1.position)
   player1.move_player()
   background.update(camera.get_pos())
-  
-  for bullet in bullets:
-      bullet.move()
-      bullet.draw(screen, camera)
-  
+
   # Then Draw
 
   background.draw()
   player1.draw_player(screen, camera.get_pos())
+
+  # This one's weird
+
+  for bullet in bullets:
+    bullet.move()
+    bullet.draw(screen, camera)
+
   draw_hud(screen, player1.get_stats())
 
   # Update display

@@ -29,7 +29,7 @@ class Fireable:
 class Bullet(Fireable):
     def __init__(self, x, y, direction, source):
         super().__init__(x, y, direction, source, 15)
-        self.sprite = make_sprite_array('assets/fireables/bullet.png', 4, 16)
+        self.sprite = make_sprite_array('assets/fireables/lazer.png', 4, 16)
     
     def draw(self, screen, camera):
         direction_num = {
@@ -38,5 +38,5 @@ class Bullet(Fireable):
             'left': 2,
             'right': 0
         }
-        screen.blit(self.sprite[direction_num[self.direction]], (self.position[0] - camera.get_pos()[0], self.position[1] - camera.get_pos()[1]))
+        screen.blit(self.sprite[direction_num[self.direction]+1], (self.position[0] - camera.get_pos()[0], self.position[1] - camera.get_pos()[1]))
 
