@@ -10,7 +10,7 @@ class Weapon:
 		self.did_fire = False
 		self.has_special_shoot = False  # Add has_special_shoot variable
 		self.fireabletype = "bullet"
-		self.lists = Lists()
+		self.lists = Lists()  # Use singleton instance
 
 	def shoot(self, x, y, direction, source):
 		pass

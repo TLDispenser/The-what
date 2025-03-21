@@ -20,57 +20,76 @@ background = Background('assets/background.png', screen)
 
 # Ensure display is properly set 
 pygame.display.flip()
-lists = Lists()
 
-# Initialize player and camera
-player1 = Player(10, 10)
+# Initialize big boy variables
+lists = Lists()
+lists.append_player(Player(0, 0))
+
 camera = Camera(0, 0, screen)
 
 # Initialize clock
 clock = pygame.time.Clock()
 
 def main():
-    # Clear the screen
-    screen.fill((0, 0, 0))
 
-    # Do logic
-    camera.move(player1.position)
-    player1.move_player()
-    background.update(camera.get_pos())
 
-    # Then Draw
-    background.draw()
-    player1.draw_player(screen, camera.get_pos())
+	# Clear the screen
+	screen.fill((0, 0, 0))
 
-    # This one's weird
-    # ... REAL WEIRD
 
-    # Debugging: Print the state of the lists object
-    # print(f"Bullets in lists: {lists.bullets}")
-    # print(f"Projectiles in lists: {lists.projectiles}")
 
-    bullets = lists.bullets
-    projectiles = lists.get_projectiles()
+	# Do logic
+	camera.move(lists.get_players()[0].position)
+	lists.get_players()[0].move_player()
+	background.update(camera.get_pos())
 
-    for bullet in bullets:
-        bullet.move()
-        bullet.draw(screen, camera)
-    
-    for projectile in projectiles:
-        projectile.move()
-        projectile.draw(screen, camera)
+	# Then Draw
+	background.draw()
+	lists.get_players()[0].draw_player(screen, camera.get_pos())
 
-    draw_hud(screen, player1.get_stats())
+	# This one's weird
+	# ... REAL WEIRD
 
-    # Update display
-    pygame.display.update()
+	# Debugging: Print the state of the lists object
+	# print(f"Bullets in lists: {lists.bullets}")
+	# print(f"Projectiles in lists: {lists.projectiles}")
+
+	bullets = lists.bullets
+	projectiles = lists.get_projectiles()
+
+	for bullet in bullets:
+		bullet.move()
+		bullet.draw(screen, camera)
+	
+	for projectile in projectiles:
+		projectile.move()
+		projectile.draw(screen, camera)
+
+	draw_hud(screen, lists.get_players()[0].get_stats())
+
+	# Update display
+	pygame.display.update()
 
 running = True
+paused = False
 
 print("RUNNING!")
 
+pressing_p = False
+
 # Game loop
 while running:
+
+	lists = Lists()
+
+	keys = pygame.key.get_pressed()
+	
+	if keys[pygame.K_p]:
+		if not pressing_p:
+			paused = not paused
+			pressing_p = True
+	else:
+		pressing_p = False
 	# Handle events
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
@@ -82,8 +101,17 @@ while running:
 			background = Background('assets/background.png', screen)
 
 	# Run game logic and ensure screen updates are visible
-	main()
+	if not paused:
+		main()
+	else:
+		# Display
+		screen.fill((0, 0, 0))
+		font = pygame.font.Font(None, 36)
+		text = font.render("PAUSED", True, (255, 255, 255))
+		screen.blit(text, (10, 10))
+		pygame.display.update()
 	
+
 	# Ensure display updates are processed
 	pygame.display.flip()
 	

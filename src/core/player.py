@@ -7,7 +7,7 @@ class Player:
 	
 
 	def __init__(self, x, y):
-		self.lists = Lists()
+		self.lists = Lists()  # Use singleton instance
 		self.position = (x, y)
 		self.velocity = (0, 0)
 		self.direction = "right"
