@@ -117,7 +117,10 @@ class Player:
 			"projectile": self.lists.get_projectiles()
 		}
 		if keys[pygame.K_c]:
-			self.weapons[self.selected_weapon+(len(self.weapons)//2)].shoot(self.position[0], self.position[1], self.direction, "Player")
+			if self.weapons[self.selected_weapon+(len(self.weapons)//2)].has_special_shoot:
+				self.weapons[self.selected_weapon+(len(self.weapons)//2)].special_shoot(self.position[0], self.position[1], self.direction, "Player")
+			else:
+				self.weapons[self.selected_weapon+(len(self.weapons)//2)].shoot(self.position[0], self.position[1], self.direction, "Player")
 		else:
 			self.weapons[self.selected_weapon+(len(self.weapons)//2)].did_fire = False
 
